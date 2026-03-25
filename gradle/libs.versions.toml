@@ -26,3 +26,4 @@ jbox2d = { module = "org.jbox2d:jbox2d-library", version.ref = "jbox2d" }
 android-application = { id = "com.android.application", version.ref = "agp" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+vanniktech-publish = { id = "com.vanniktech.maven.publish", version = "0.30.0" }
