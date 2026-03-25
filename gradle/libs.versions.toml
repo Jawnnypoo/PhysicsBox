@@ -1,0 +1,28 @@
+[versions]
+agp = "9.1.0"
+kotlin = "2.3.10"
+composeBom = "2026.02.01"
+activityCompose = "1.12.4"
+lifecycle = "2.10.0"
+coroutines = "1.10.2"
+androidxCore = "1.17.0"
+jbox2d = "2.2.1.1"
+
+[libraries]
+composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
+androidxCoreKtx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidxActivityCompose = { module = "androidx.activity:activity-compose", version.ref = "activityCompose" }
+androidxLifecycleRuntimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "lifecycle" }
+androidxComposeUi = { module = "androidx.compose.ui:ui" }
+androidxComposeUiToolingPreview = { module = "androidx.compose.ui:ui-tooling-preview" }
+androidxComposeFoundation = { module = "androidx.compose.foundation:foundation" }
+androidxComposeMaterial3 = { module = "androidx.compose.material3:material3" }
+androidxComposeUiTooling = { module = "androidx.compose.ui:ui-tooling" }
+kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinxCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
+jbox2d = { module = "org.jbox2d:jbox2d-library", version.ref = "jbox2d" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
