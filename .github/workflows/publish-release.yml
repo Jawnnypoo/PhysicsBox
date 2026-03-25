@@ -11,7 +11,7 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
-    if: github.repository == 'Jawnnypoo/PhysicsLayout'
+    if: github.repository == 'Jawnnypoo/PhysicsBox'
 
     steps:
       - name: Checkout
