@@ -1,9 +1,15 @@
+import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
+import com.vanniktech.maven.publish.SonatypeHost
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.vanniktech.publish)
 }
+
+group = findProperty("GROUP") as String
+version = findProperty("VERSION_NAME") as String
 
 android {
     namespace = "com.jawnnypoo.physicsbox"
@@ -37,4 +43,13 @@ dependencies {
     implementation(libs.androidxComposeFoundation)
     implementation(libs.kotlinxCoroutinesCore)
     implementation(libs.kotlinxCoroutinesAndroid)
+}
+
+mavenPublishing {
+    configure(AndroidSingleVariantLibrary("release", true, true))
+    coordinates("com.jawnnypoo", "physicsbox", version.toString())
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    if (System.getenv("RELEASE_SIGNING_ENABLED") == "true") {
+        signAllPublications()
+    }
 }
