@@ -1,6 +1,7 @@
 [versions]
 agp = "9.1.0"
 kotlin = "2.3.10"
+composeMultiplatform = "1.10.0"
 composeBom = "2026.02.01"
 activityCompose = "1.12.4"
 lifecycle = "2.10.0"
@@ -21,9 +22,15 @@ androidxComposeUiTooling = { module = "androidx.compose.ui:ui-tooling" }
 kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinxCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
 boks2d = { module = "io.github.joaomcl:boks2d", version.ref = "boks2d" }
+composeUi = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
+composeFoundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
-vanniktech-publish = { id = "com.vanniktech.maven.publish", version = "0.30.0" }
+vanniktech-publish = { id = "com.vanniktech.maven.publish", version = "0.36.0" }
+kotlinMultiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+composeMultiplatform = { id = "org.jetbrains.compose", version.ref = "composeMultiplatform" }

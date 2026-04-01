@@ -1,9 +1,11 @@
-import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
-import com.vanniktech.maven.publish.SonatypeHost
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.JavadocJar
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlinMultiplatform)
+    id("com.android.kotlin.multiplatform.library")
+    alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.vanniktech.publish)
 }
@@ -11,44 +13,40 @@ plugins {
 group = findProperty("GROUP") as String
 version = findProperty("VERSION_NAME") as String
 
-android {
-    namespace = "com.jawnnypoo.physicsbox"
-    compileSdk = 36
-
-    defaultConfig {
-        minSdk = 21
-    }
-
-    buildFeatures {
-        compose = true
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-}
-
 kotlin {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_17)
+    android {
+        namespace = "com.jawnnypoo.physicsbox"
+        compileSdk = 36
+        minSdk = 21
+
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
     }
-}
 
-dependencies {
-    api(libs.boks2d)
+    jvm("desktop") {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_17)
+        }
+    }
 
-    implementation(platform(libs.composeBom))
-    implementation(libs.androidxComposeUi)
-    implementation(libs.androidxComposeFoundation)
-    implementation(libs.kotlinxCoroutinesCore)
-    implementation(libs.kotlinxCoroutinesAndroid)
+    iosArm64()
+    iosSimulatorArm64()
+
+    sourceSets {
+        commonMain.dependencies {
+            api(libs.boks2d)
+
+            implementation(libs.composeUi)
+            implementation(libs.composeFoundation)
+            implementation(libs.kotlinxCoroutinesCore)
+        }
+    }
 }
 
 mavenPublishing {
-    configure(AndroidSingleVariantLibrary("release", true, true))
-    coordinates("com.jawnnypoo", "physicsbox", version.toString())
-    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL)
+    configure(KotlinMultiplatform(javadocJar = JavadocJar.Empty()))
+    publishToMavenCentral()
     if (System.getenv("RELEASE_SIGNING_ENABLED") == "true") {
         signAllPublications()
     }
