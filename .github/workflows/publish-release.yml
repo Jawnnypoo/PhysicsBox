@@ -10,7 +10,7 @@ env:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
     if: github.repository == 'Jawnnypoo/PhysicsBox'
 
     steps:

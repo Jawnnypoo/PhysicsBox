@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
 
     steps:
       - name: Checkout
@@ -17,5 +17,5 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Test
+      - name: Build
         run: ./gradlew assemble
