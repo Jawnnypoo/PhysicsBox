@@ -27,9 +27,9 @@ jobs:
       - name: Publish Android & JVM
         run: >
           ./gradlew
-          publishAndroidReleasePublicationToMavenCentral
-          publishJvmPublicationToMavenCentral
-          publishKotlinMultiplatformPublicationToMavenCentral
+          publishAndroidPublicationToMavenCentralRepository
+          publishJvmPublicationToMavenCentralRepository
+          publishKotlinMultiplatformPublicationToMavenCentralRepository
           -PVERSION_NAME="${GITHUB_REF_NAME}"
           --no-configuration-cache
         env:
@@ -56,8 +56,8 @@ jobs:
       - name: Publish iOS
         run: >
           ./gradlew
-          publishIosArm64PublicationToMavenCentral
-          publishIosSimulatorArm64PublicationToMavenCentral
+          publishIosArm64PublicationToMavenCentralRepository
+          publishIosSimulatorArm64PublicationToMavenCentralRepository
           -PVERSION_NAME="${GITHUB_REF_NAME}"
           --no-configuration-cache
         env:
