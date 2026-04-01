@@ -1,6 +1,8 @@
 # PhysicsBox
 Compose-native physics layout powered by [JBox2D](https://github.com/jbox2d/jbox2d). Simply add composables, enable physics, and watch them fall! The Jetpack Compose equivalent of [PhysicsLayout](https://github.com/Jawnnypoo/PhysicsLayout).
 
+[![Maven Central](https://img.shields.io/maven-central/v/com.jawnnypoo/physicsbox)](https://central.sonatype.com/artifact/com.jawnnypoo/physicsbox)
+
 ## Gradle
 ```kotlin
 dependencies {
