@@ -25,6 +25,7 @@ boks2d = { module = "io.github.joaomcl:boks2d", version.ref = "boks2d" }
 composeUi = { module = "org.jetbrains.compose.ui:ui", version.ref = "composeMultiplatform" }
 composeFoundation = { module = "org.jetbrains.compose.foundation:foundation", version.ref = "composeMultiplatform" }
 
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }

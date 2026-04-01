@@ -16,4 +16,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "PhysicsBox"
 
-include(":physicsbox", ":sample")
+include(":physicsbox", ":composeApp", ":androidApp")
