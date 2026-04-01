@@ -1,7 +1,5 @@
 package com.jawnnypoo.physicsbox
 
-import org.jbox2d.dynamics.BodyType
-
 /**
  * Controls how a physics body behaves in the simulation.
  */
@@ -22,10 +20,4 @@ enum class PhysicsBodyType {
      * but other bodies react to it. Use for platforms or conveyor belts.
      */
     KINEMATIC
-}
-
-internal fun PhysicsBodyType.toBox2D(): BodyType = when (this) {
-    PhysicsBodyType.DYNAMIC -> BodyType.DYNAMIC
-    PhysicsBodyType.STATIC -> BodyType.STATIC
-    PhysicsBodyType.KINEMATIC -> BodyType.KINEMATIC
 }

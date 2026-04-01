@@ -6,7 +6,7 @@ activityCompose = "1.12.4"
 lifecycle = "2.10.0"
 coroutines = "1.10.2"
 androidxCore = "1.17.0"
-jbox2d = "2.2.1.1"
+boks2d = "0.1.1"
 
 [libraries]
 composeBom = { module = "androidx.compose:compose-bom", version.ref = "composeBom" }
@@ -20,7 +20,7 @@ androidxComposeMaterial3 = { module = "androidx.compose.material3:material3" }
 androidxComposeUiTooling = { module = "androidx.compose.ui:ui-tooling" }
 kotlinxCoroutinesCore = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
 kotlinxCoroutinesAndroid = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
-jbox2d = { module = "org.jbox2d:jbox2d-library", version.ref = "jbox2d" }
+boks2d = { module = "io.github.joaomcl:boks2d", version.ref = "boks2d" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

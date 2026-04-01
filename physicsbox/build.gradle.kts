@@ -36,7 +36,7 @@ kotlin {
 }
 
 dependencies {
-    api(libs.jbox2d)
+    api(libs.boks2d)
 
     implementation(platform(libs.composeBom))
     implementation(libs.androidxComposeUi)
