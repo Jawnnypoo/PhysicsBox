@@ -17,5 +17,5 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Test
-        run: ./gradlew assemble
+      - name: Build Android & Desktop
+        run: ./gradlew :physicsbox:compileAndroidMain :physicsbox:compileKotlinDesktop :sample:compileDebugKotlin

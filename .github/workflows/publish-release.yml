@@ -9,7 +9,7 @@ env:
   RELEASE_SIGNING_ENABLED: true
 
 jobs:
-  publish:
+  publish-jvm:
     runs-on: ubuntu-latest
     if: github.repository == 'Jawnnypoo/PhysicsBox'
 
@@ -24,8 +24,42 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Release to Maven Central
-        run: ./gradlew publishAndReleaseToMavenCentral -PVERSION_NAME="${GITHUB_REF_NAME}" --no-configuration-cache
+      - name: Publish Android & Desktop
+        run: >
+          ./gradlew
+          publishAndroidReleasePublicationToMavenCentral
+          publishDesktopPublicationToMavenCentral
+          publishKotlinMultiplatformPublicationToMavenCentral
+          -PVERSION_NAME="${GITHUB_REF_NAME}"
+          --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_PRIVATE_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+
+  publish-ios:
+    runs-on: macos-latest
+    if: github.repository == 'Jawnnypoo/PhysicsBox'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: '17'
+          cache: gradle
+
+      - name: Publish iOS
+        run: >
+          ./gradlew
+          publishIosArm64PublicationToMavenCentral
+          publishIosSimulatorArm64PublicationToMavenCentral
+          -PVERSION_NAME="${GITHUB_REF_NAME}"
+          --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
