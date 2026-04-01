@@ -24,11 +24,11 @@ jobs:
           java-version: '17'
           cache: gradle
 
-      - name: Publish Android & Desktop
+      - name: Publish Android & JVM
         run: >
           ./gradlew
           publishAndroidReleasePublicationToMavenCentral
-          publishDesktopPublicationToMavenCentral
+          publishJvmPublicationToMavenCentral
           publishKotlinMultiplatformPublicationToMavenCentral
           -PVERSION_NAME="${GITHUB_REF_NAME}"
           --no-configuration-cache
