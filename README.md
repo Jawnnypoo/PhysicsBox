@@ -58,7 +58,7 @@ val state = rememberPhysicsBoxState().apply {
     hasBounds = true             // Determines if the layout has bounds on edges (Default true)
     gravityX = 0f                // X gravity — positive is right, negative is left (Default 0)
     gravityY = PhysicsBoxState.EARTH_GRAVITY  // Y gravity — positive is down, negative is up (Default 9.8)
-    subStepCount = 4             // Box2D sub-steps per step — higher is more accurate (Default 4)
+    subStepCount = 4             // boks2d sub-steps per step — higher is more accurate (Default 4)
 }
 ```
 
@@ -100,7 +100,7 @@ Hook your device's sensor data into gravity for a tilt-controlled experience:
 ```kotlin
 state.setGravity(x = sensorX, y = sensorY)
 ```
-This updates Box2D gravity in real time.
+This updates boks2d gravity in real time.
 
 ## Sample App
 Check out the sample modules to see these features in action:

@@ -26,7 +26,7 @@ import kotlin.math.roundToInt
 /**
  * Compose equivalent of PhysicsLayout for View-based UIs.
  *
- * `PhysicsBox` hosts child composables in a Box2D world and continuously updates
+ * `PhysicsBox` hosts child composables in a boks2d world and continuously updates
  * their x/y position + rotation.
  */
 @Composable
