@@ -394,7 +394,7 @@ class PhysicsBoxState {
     ): Body {
         val body = world.createBody(
             BodyDef(
-                type = spec.config.bodyType.toBox2D(),
+                type = spec.config.bodyType.toEngineType(),
                 fixedRotation = spec.config.fixedRotation,
                 position = Vec2(
                     pixelsToMeters(spec.initialX + spec.width / 2f, pixelsPerMeter),
@@ -437,7 +437,7 @@ class PhysicsBoxState {
     private fun radiansToDegrees(radians: Float): Float = (radians / PI.toFloat()) * 180f
 }
 
-private fun PhysicsBodyType.toBox2D(): BodyType = when (this) {
+private fun PhysicsBodyType.toEngineType(): BodyType = when (this) {
     PhysicsBodyType.DYNAMIC -> BodyType.Dynamic
     PhysicsBodyType.STATIC -> BodyType.Static
     PhysicsBodyType.KINEMATIC -> BodyType.Kinematic
