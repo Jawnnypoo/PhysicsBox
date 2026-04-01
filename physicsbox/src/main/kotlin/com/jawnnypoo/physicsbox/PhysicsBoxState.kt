@@ -3,17 +3,19 @@ package com.jawnnypoo.physicsbox
 import androidx.compose.runtime.Stable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import org.jbox2d.collision.shapes.CircleShape
-import org.jbox2d.collision.shapes.PolygonShape
-import org.jbox2d.common.Vec2
-import org.jbox2d.dynamics.Body
-import org.jbox2d.dynamics.BodyDef
-import org.jbox2d.dynamics.BodyType
-import org.jbox2d.dynamics.FixtureDef
-import org.jbox2d.dynamics.World
+import io.github.joaomcl.boks2d.core.Body
+import io.github.joaomcl.boks2d.core.BodyDef
+import io.github.joaomcl.boks2d.core.BodyType
+import io.github.joaomcl.boks2d.core.World
+import io.github.joaomcl.boks2d.core.WorldDef
+import io.github.joaomcl.boks2d.math.Rot
+import io.github.joaomcl.boks2d.math.Transform
+import io.github.joaomcl.boks2d.math.Vec2
+import io.github.joaomcl.boks2d.shapes.Circle
+import io.github.joaomcl.boks2d.shapes.Polygon
+import io.github.joaomcl.boks2d.shapes.ShapeDef
 import kotlin.math.PI
 import kotlin.math.max
 
@@ -33,6 +35,7 @@ class PhysicsBoxState {
 
         private const val DEFAULT_BOUNDS_DP = 20f
         private const val DEFAULT_PIXELS_PER_METER_DP = 20f
+        private const val DEFAULT_SUB_STEP_COUNT = 4
     }
 
     /** Enables/disables physics processing. */
@@ -50,11 +53,8 @@ class PhysicsBoxState {
     /** Y gravity (positive down, negative up). */
     var gravityY by mutableFloatStateOf(EARTH_GRAVITY)
 
-    /** Number of Box2D velocity iterations per step. */
-    var velocityIterations by mutableIntStateOf(8)
-
-    /** Number of Box2D position iterations per step. */
-    var positionIterations by mutableIntStateOf(3)
+    /** Number of boks2d sub-steps per step. */
+    var subStepCount: Int = DEFAULT_SUB_STEP_COUNT
 
     /**
      * Pixels per meter conversion factor.
@@ -171,7 +171,10 @@ class PhysicsBoxState {
         draggingIndex = null
         dragOriginalType = null
 
-        val newWorld = World(Vec2(gravityX, gravityY))
+        // Destroy old world if it exists
+        world?.destroy()
+
+        val newWorld = World(WorldDef(gravity = Vec2(gravityX, gravityY)))
         if (hasBounds) {
             createBounds(
                 world = newWorld,
@@ -207,7 +210,7 @@ class PhysicsBoxState {
         if (!isPhysicsEnabled || deltaSeconds <= 0f) return
 
         world.gravity = Vec2(gravityX, gravityY)
-        world.step(deltaSeconds, velocityIterations, positionIterations)
+        world.step(deltaSeconds, subStepCount)
 
         bodyStates.forEachIndexed { index, bodyUiState ->
             if (draggingIndex == index) return@forEachIndexed
@@ -222,7 +225,7 @@ class PhysicsBoxState {
     internal fun findBodyIndexAt(x: Float, y: Float): Int? {
         for (i in bodyStates.indices.reversed()) {
             val state = bodyStates[i]
-            if (state.body.type == BodyType.STATIC) continue
+            if (state.body.type == BodyType.Static) continue
 
             val left = state.x
             val top = state.y
@@ -238,7 +241,7 @@ class PhysicsBoxState {
     internal fun onDragStart(index: Int, touchX: Float, touchY: Float) {
         val state = bodyStates.getOrNull(index) ?: return
         val body = state.body
-        if (body.type == BodyType.STATIC) return
+        if (body.type == BodyType.Static) return
 
         draggingIndex = index
         dragOriginalType = body.type
@@ -248,7 +251,7 @@ class PhysicsBoxState {
         dragOffsetX = touchX - centerX
         dragOffsetY = touchY - centerY
 
-        body.type = BodyType.KINEMATIC
+        body.type = BodyType.Kinematic
         body.linearVelocity = Vec2(0f, 0f)
         body.angularVelocity = 0f
     }
@@ -262,12 +265,12 @@ class PhysicsBoxState {
         val centerX = touchX - dragOffsetX
         val centerY = touchY - dragOffsetY
 
-        body.setTransform(
-            Vec2(
+        body.transform = Transform(
+            position = Vec2(
                 pixelsToMeters(centerX, currentPixelsPerMeter),
                 pixelsToMeters(centerY, currentPixelsPerMeter),
             ),
-            body.angle,
+            rotation = body.rotation,
         )
 
         state.x = centerX - state.width / 2f
@@ -280,10 +283,10 @@ class PhysicsBoxState {
         val state = bodyStates.getOrNull(index) ?: return
         val body = state.body
 
-        val restoredType = dragOriginalType ?: BodyType.DYNAMIC
+        val restoredType = dragOriginalType ?: BodyType.Dynamic
         body.type = restoredType
 
-        if (restoredType == BodyType.DYNAMIC) {
+        if (restoredType == BodyType.Dynamic) {
             body.linearVelocity = Vec2(
                 pixelsToMeters(velocityXPxPerSec, currentPixelsPerMeter),
                 pixelsToMeters(velocityYPxPerSec, currentPixelsPerMeter),
@@ -302,6 +305,7 @@ class PhysicsBoxState {
         draggingIndex = null
         dragOriginalType = null
         bodyStates.clear()
+        world?.destroy()
         world = null
         lastContainerWidth = -1
         lastContainerHeight = -1
@@ -364,23 +368,23 @@ class PhysicsBoxState {
         heightPx: Float,
         pixelsPerMeter: Float,
     ) {
-        val bodyDef = BodyDef().apply {
-            type = BodyType.STATIC
-            position = Vec2(
-                pixelsToMeters(centerXPx, pixelsPerMeter),
-                pixelsToMeters(centerYPx, pixelsPerMeter),
+        val body = world.createBody(
+            BodyDef(
+                type = BodyType.Static,
+                position = Vec2(
+                    pixelsToMeters(centerXPx, pixelsPerMeter),
+                    pixelsToMeters(centerYPx, pixelsPerMeter),
+                ),
             )
-        }
-        val body = world.createBody(bodyDef)
+        )
 
-        val shape = PolygonShape().apply {
-            setAsBox(
+        body.createPolygonShape(
+            ShapeDef(),
+            Polygon.makeBox(
                 pixelsToMeters(widthPx / 2f, pixelsPerMeter),
                 pixelsToMeters(heightPx / 2f, pixelsPerMeter),
-            )
-        }
-
-        body.createFixture(shape, 0f)
+            ),
+        )
     }
 
     private fun createBody(
@@ -388,37 +392,41 @@ class PhysicsBoxState {
         spec: ChildSpec,
         pixelsPerMeter: Float,
     ): Body {
-        val bodyDef = BodyDef().apply {
-            type = spec.config.bodyType.toBox2D()
-            fixedRotation = spec.config.fixedRotation
-            position = Vec2(
-                pixelsToMeters(spec.initialX + spec.width / 2f, pixelsPerMeter),
-                pixelsToMeters(spec.initialY + spec.height / 2f, pixelsPerMeter),
+        val body = world.createBody(
+            BodyDef(
+                type = spec.config.bodyType.toBox2D(),
+                fixedRotation = spec.config.fixedRotation,
+                position = Vec2(
+                    pixelsToMeters(spec.initialX + spec.width / 2f, pixelsPerMeter),
+                    pixelsToMeters(spec.initialY + spec.height / 2f, pixelsPerMeter),
+                ),
+            )
+        )
+
+        val shapeDef = ShapeDef(
+            friction = spec.config.friction,
+            restitution = spec.config.restitution,
+            density = spec.config.density,
+        )
+
+        when (spec.config.shape) {
+            Shape.RECTANGLE -> body.createPolygonShape(
+                shapeDef,
+                Polygon.makeBox(
+                    pixelsToMeters(spec.width / 2f, pixelsPerMeter),
+                    pixelsToMeters(spec.height / 2f, pixelsPerMeter),
+                ),
+            )
+
+            Shape.CIRCLE -> body.createCircleShape(
+                shapeDef,
+                Circle(
+                    center = Vec2.Zero,
+                    radius = pixelsToMeters(max(spec.width, spec.height) / 2f, pixelsPerMeter),
+                ),
             )
         }
 
-        val body = world.createBody(bodyDef)
-
-        val fixtureDef = FixtureDef().apply {
-            friction = spec.config.friction
-            restitution = spec.config.restitution
-            density = spec.config.density
-
-            shape = when (spec.config.shape) {
-                Shape.RECTANGLE -> PolygonShape().apply {
-                    setAsBox(
-                        pixelsToMeters(spec.width / 2f, pixelsPerMeter),
-                        pixelsToMeters(spec.height / 2f, pixelsPerMeter),
-                    )
-                }
-
-                Shape.CIRCLE -> CircleShape().apply {
-                    radius = pixelsToMeters(max(spec.width, spec.height) / 2f, pixelsPerMeter)
-                }
-            }
-        }
-
-        body.createFixture(fixtureDef)
         return body
     }
 
@@ -427,6 +435,12 @@ class PhysicsBoxState {
     private fun metersToPixels(meters: Float, pixelsPerMeter: Float): Float = meters * pixelsPerMeter
 
     private fun radiansToDegrees(radians: Float): Float = (radians / PI.toFloat()) * 180f
+}
+
+private fun PhysicsBodyType.toBox2D(): BodyType = when (this) {
+    PhysicsBodyType.DYNAMIC -> BodyType.Dynamic
+    PhysicsBodyType.STATIC -> BodyType.Static
+    PhysicsBodyType.KINEMATIC -> BodyType.Kinematic
 }
 
 @Stable
