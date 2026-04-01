@@ -46,7 +46,7 @@ kotlin {
 
 mavenPublishing {
     configure(KotlinMultiplatform(javadocJar = JavadocJar.Empty()))
-    publishToMavenCentral()
+    publishToMavenCentral(automaticRelease = true)
     if (System.getenv("RELEASE_SIGNING_ENABLED") == "true") {
         signAllPublications()
     }
