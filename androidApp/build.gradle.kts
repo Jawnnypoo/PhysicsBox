@@ -35,17 +35,7 @@ kotlin {
 }
 
 dependencies {
-    implementation(project(":physicsbox"))
+    implementation(project(":composeApp"))
 
-    implementation(libs.androidxCoreKtx)
-    implementation(libs.androidxLifecycleRuntimeKtx)
     implementation(libs.androidxActivityCompose)
-
-    implementation(platform(libs.composeBom))
-    implementation(libs.androidxComposeUi)
-    implementation(libs.androidxComposeFoundation)
-    implementation(libs.androidxComposeMaterial3)
-    implementation(libs.androidxComposeUiToolingPreview)
-
-    debugImplementation(libs.androidxComposeUiTooling)
 }
