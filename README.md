@@ -1,12 +1,36 @@
 # PhysicsBox
-Compose multiplatform physics enabled layout powered by [boks2d](https://github.com/joaomcl/boks2d). Simply add composables, enable physics, and watch them fall! The Compose equivalent of [PhysicsLayout](https://github.com/Jawnnypoo/PhysicsLayout).
+Compose Multiplatform physics-enabled layout powered by [boks2d](https://github.com/joaomcl/boks2d). Simply add composables, enable physics, and watch them fall! The Compose equivalent of [PhysicsLayout](https://github.com/Jawnnypoo/PhysicsLayout).
 
 [![Maven Central](https://img.shields.io/maven-central/v/com.jawnnypoo/physicsbox)](https://central.sonatype.com/artifact/com.jawnnypoo/physicsbox)
 
+## Supported Platforms
+- Android
+- JVM (Desktop)
+- iOS (arm64, simulator arm64)
+
 ## Gradle
+
+### Multiplatform
+For Compose Multiplatform projects, add the dependency in your `commonMain` source set:
+```kotlin
+commonMain.dependencies {
+    implementation("com.jawnnypoo:physicsbox:latest.release.here")
+}
+```
+
+### Android
+For Android-only projects:
 ```kotlin
 dependencies {
-    implementation("com.jawnnypoo:physicsbox:latest.release.here")
+    implementation("com.jawnnypoo:physicsbox-android:latest.release.here")
+}
+```
+
+### JVM (Desktop)
+For JVM-only projects:
+```kotlin
+dependencies {
+    implementation("com.jawnnypoo:physicsbox-jvm:latest.release.here")
 }
 ```
 
@@ -21,10 +45,6 @@ PhysicsBox(
         .height(320.dp),
     state = state,
 ) {
-    ImageFromRes(R.drawable.ic_launcher)
-
-    ImageFromRes(R.drawable.ic_launcher)
-
     Text("Hello world, I have physics!")
 }
 ```
@@ -38,8 +58,7 @@ val state = rememberPhysicsBoxState().apply {
     hasBounds = true             // Determines if the layout has bounds on edges (Default true)
     gravityX = 0f                // X gravity — positive is right, negative is left (Default 0)
     gravityY = PhysicsBoxState.EARTH_GRAVITY  // Y gravity — positive is down, negative is up (Default 9.8)
-    velocityIterations = 8       // Box2D velocity iterations per step (Default 8)
-    positionIterations = 3       // Box2D position iterations per step (Default 3)
+    subStepCount = 4             // Box2D sub-steps per step — higher is more accurate (Default 4)
 }
 ```
 
@@ -84,10 +103,14 @@ state.setGravity(x = sensorX, y = sensorY)
 This updates Box2D gravity in real time.
 
 ## Sample App
-Check out the `:sample` module to see these features in action — gravity sliders, bounds toggle, fling/drag interactions, and mixed shapes.
+Check out the sample modules to see these features in action:
+- **Android**: Build and run the `:androidApp` module
+- **Desktop**: `./gradlew :composeApp:run`
+
+The sample includes gravity sliders, bounds toggle, fling/drag interactions, and mixed shapes. On Android, tilt/gimbal control is also available via the device accelerometer.
 
 ## Making a Game?
-This library was designed with the intention of allowing for playful physics animations within normal Android apps. It is not built to be a game engine or meant to compete with the likes. If you are looking to do more intense mobile games, we recommend libraries such as [libGDX](https://libgdx.badlogicgames.com/) or [Unity](https://unity3d.com/)
+This library was designed with the intention of allowing for playful physics animations within normal apps. It is not built to be a game engine or meant to compete with the likes. If you are looking to do more intense mobile games, we recommend libraries such as [libGDX](https://libgdx.badlogicgames.com/) or [Unity](https://unity3d.com/)
 
 License
 --------

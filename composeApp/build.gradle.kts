@@ -19,7 +19,7 @@ kotlin {
         }
     }
 
-    jvm("desktop") {
+    jvm {
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_17)
         }
@@ -44,8 +44,7 @@ kotlin {
             implementation(compose.material3)
         }
 
-        val desktopMain by getting
-        desktopMain.dependencies {
+        jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
         }
     }
