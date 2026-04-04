@@ -138,7 +138,7 @@ class PhysicsBoxState {
         // Remove excess bodies from the end
         val currentWorld = world ?: return
         while (bodyStates.size > children.size) {
-            val removed = bodyStates.removeLast()
+            val removed = bodyStates.removeAt(bodyStates.lastIndex)
             currentWorld.destroyBody(removed.body)
         }
 
